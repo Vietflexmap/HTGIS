@@ -124,7 +124,7 @@
         <button class="map-btn feature" id="chartToggle">📊 Bài báo</button>
       </div>
     </div>
-    <div class="center-status"><span class="center-dot"></span>Tâm mặc định: Đà Nẵng · 16.067778, 108.220833</div>
+    <div class="center-status"><span class="center-dot"></span>HTGIS Map Core v3 · Đà Nẵng · 16.067778, 108.220833</div>
     <section id="detail" class="floating hidden" aria-live="polite"></section>
     <section id="chartPanel" class="floating hidden">
       <div class="panel-head">
@@ -138,6 +138,7 @@
 
 <script>
 const conferences=window.HTGIS_CONFERENCES||[];
+const BUILD_ID='HTGIS-map-core-v3';
 
 // Tâm hiển thị chuẩn của HTGIS: trung tâm đô thị Đà Nẵng.
 const DA_NANG_CENTER=[16.067778,108.220833];
@@ -167,11 +168,10 @@ document.getElementById('metricCities').textContent=citySet.size;
 const yearFilter=document.getElementById('yearFilter');
 conferences.slice().reverse().forEach(c=>{const o=document.createElement('option');o.value=c.year;o.textContent=c.year;yearFilter.appendChild(o)});
 
-// QUAN TRỌNG: VietflexMap có maxBounds mặc định cho Việt Nam + Biển Đông.
-// Ở viewport desktop rộng và zoom thấp, cơ chế giới hạn có thể dịch tâm.
-// HTGIS chủ động đặt maxBounds:null và dùng zoom nguyên để không bị ép lên phía bắc.
-const map=Vietflex.vietflexMap('map',{
-  googleMaps:false,
+// DỨT ĐIỂM: dùng trực tiếp Vietflex.Map (lõi Leaflet-compatible),
+// KHÔNG dùng Vietflex.vietflexMap() để loại bỏ toàn bộ default center/maxBounds
+// của VietflexMap có thể can thiệp vào viewport HTGIS.
+const map=new Vietflex.Map('map',{
   center:DA_NANG_CENTER,
   zoom:DEFAULT_ZOOM_DESKTOP,
   minZoom:4,
@@ -180,7 +180,8 @@ const map=Vietflex.vietflexMap('map',{
   zoomSnap:1,
   zoomDelta:1,
   zoomControl:false,
-  attributionControl:false
+  attributionControl:false,
+  worldCopyJump:false
 });
 
 new Vietflex.ZoomControl({position:'bottomleft'}).addTo(map);
@@ -299,15 +300,16 @@ addEventListener('resize',()=>setTimeout(()=>map.invalidateSize({pan:false}),120
 renderList();
 syncMobile();
 
-// Cưỡng bức khung nhìn sau khi DOM + marker + tile layer đã được gắn.
-// Dùng reset:true để bỏ mọi pan offset phát sinh trong giai đoạn khởi tạo.
+// Cưỡng bức đúng tâm sau khi DOM + marker + tile layer đã được gắn.
 const forceInitialView=()=>{
   try{map.invalidateSize({pan:false});}catch(e){map.invalidateSize();}
   map.setView(DA_NANG_CENTER,defaultZoom(),{animate:false,reset:true});
 };
 if(typeof map.whenReady==='function')map.whenReady(()=>requestAnimationFrame(()=>requestAnimationFrame(forceInitialView)));
 else requestAnimationFrame(()=>requestAnimationFrame(forceInitialView));
-setTimeout(forceInitialView,300);
+setTimeout(forceInitialView,250);
+setTimeout(forceInitialView,900);
+console.info(BUILD_ID,'center=',DA_NANG_CENTER,'zoom=',defaultZoom());
 </script>
 </body>
 </html>
