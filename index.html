@@ -39,16 +39,18 @@
   <main id="map-wrap">
     <div id="map"></div>
     <div class="map-top"><div class="control-box" id="baseControl"><button class="map-btn active" data-base="roadmap">Đường phố</button><button class="map-btn" data-base="satellite">Vệ tinh</button><button class="map-btn" data-base="terrain">Địa hình</button><button class="map-btn center-btn" id="fitVietnam" title="Đặt Đà Nẵng vào chính giữa bản đồ">◎ Đà Nẵng</button><button class="map-btn feature" id="chartToggle">📊 Bài báo</button></div></div>
-    <div class="center-status"><span class="center-dot"></span>Tâm mặc định: Đà Nẵng · 16.0744, 108.1496</div>
+    <div class="center-status"><span class="center-dot"></span>Tâm mặc định: Đà Nẵng · 16.067778, 108.220833</div>
     <section id="detail" class="floating hidden" aria-live="polite"></section>
     <section id="chartPanel" class="floating hidden"><div class="panel-head"><div><h2 class="chart-title">Bài báo / tham luận 2009–2026</h2><p class="chart-sub">Chỉ hiển thị số đã có xác nhận trong dữ liệu HTGIS.</p></div><button class="close" id="chartClose">×</button></div><div id="paperChart"></div></section>
   </main>
 </div>
 <script>
 const conferences=window.HTGIS_CONFERENCES||[];
-const DA_NANG=[16.0744,108.1496];
-const DEFAULT_ZOOM_DESKTOP=5.25;
-const DEFAULT_ZOOM_MOBILE=5;
+// Tâm HIỂN THỊ của WebGIS: trung tâm đô thị Đà Nẵng (UNGEGN/NGA).
+// Không dùng tọa độ địa điểm hội thảo làm tâm mặc định.
+const DA_NANG_CENTER=[16.067778,108.220833];
+const DEFAULT_ZOOM_DESKTOP=5.5;
+const DEFAULT_ZOOM_MOBILE=5.25;
 const hostNameByYear={2009:'ĐH Khoa học – ĐH Huế',2010:'ĐH Nông Lâm TP.HCM',2011:'ĐH Sư phạm – ĐH Đà Nẵng',2012:'ĐH Tài nguyên & Môi trường TP.HCM',2013:'Học viện Nông nghiệp Việt Nam',2014:'ĐH Cần Thơ',2015:'ĐH Khoa học Tự nhiên – ĐHQG Hà Nội',2016:'Đại học Huế',2017:'ĐH Quy Nhơn',2018:'Viện Địa lý Tài nguyên TP.HCM',2019:'ĐH Tây Nguyên',2020:'ĐH Bách khoa – ĐHQG TP.HCM',2022:'ĐH Khoa học Tự nhiên – ĐHQG TP.HCM',2023:'Học viện Nông nghiệp Việt Nam',2024:'ĐH Cần Thơ',2025:'ĐH Thủ Dầu Một',2026:'ĐH Sư phạm – ĐH Đà Nẵng'};
 const labelDirection={'Hà Nội':'right','Huế':'right','Đà Nẵng':'left','Quy Nhơn':'left','Buôn Ma Thuột':'right','TP.HCM':'right','Thủ Dầu Một':'left','Cần Thơ':'right'};
 function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));}
@@ -58,13 +60,13 @@ const valid=conferences.filter(c=>c.lat!==null),citySet=new Set(valid.map(c=>c.c
 document.getElementById('metricEvents').textContent=conferences.filter(c=>c.status!=='pause').length;document.getElementById('metricCities').textContent=citySet.size;
 const yearFilter=document.getElementById('yearFilter');conferences.slice().reverse().forEach(c=>{const o=document.createElement('option');o.value=c.year;o.textContent=c.year;yearFilter.appendChild(o)});
 
-const map=Vietflex.vietflexMap('map',{googleMaps:false,center:DA_NANG,zoom:DEFAULT_ZOOM_DESKTOP,zoomSnap:.25,zoomDelta:.25,zoomControl:false,attributionControl:false});
+const map=Vietflex.vietflexMap('map',{googleMaps:false,center:DA_NANG_CENTER,zoom:DEFAULT_ZOOM_DESKTOP,zoomSnap:.25,zoomDelta:.25,zoomControl:false,attributionControl:false});
 new Vietflex.ZoomControl({position:'bottomleft'}).addTo(map);new Vietflex.AttributionControl({position:'bottomright'}).addTo(map);
 let baseLayer=null;function setBase(type){try{if(baseLayer)map.removeLayer(baseLayer);baseLayer=Vietflex.legacyGoogleTiles({mapType:type});baseLayer.addTo(map)}catch(e){console.warn(e)}document.querySelectorAll('[data-base]').forEach(b=>b.classList.toggle('active',b.dataset.base===type))}setBase('roadmap');
 function defaultZoom(){return matchMedia('(max-width:900px)').matches?DEFAULT_ZOOM_MOBILE:DEFAULT_ZOOM_DESKTOP}
 function centerOnDaNang(animate=false){
   try{map.invalidateSize({pan:false})}catch(e){map.invalidateSize()}
-  map.setView(DA_NANG,defaultZoom(),{animate});
+  map.setView(DA_NANG_CENTER,defaultZoom(),{animate});
 }
 
 const pointGroups=new Map(),cityGroups=new Map();valid.forEach(c=>{const k=`${c.lat.toFixed(4)},${c.lng.toFixed(4)}`;if(!pointGroups.has(k))pointGroups.set(k,{lat:c.lat,lng:c.lng,city:c.city,items:[]});pointGroups.get(k).items.push(c);if(!cityGroups.has(c.city))cityGroups.set(c.city,[]);cityGroups.get(c.city).push(c)});
