@@ -215,7 +215,7 @@ valid.forEach(c=>{
 const markersByYear=new Map();
 pointGroups.forEach(g=>{
   const items=g.items.sort((a,b)=>a.year-b.year);
-  const popup=`<div style="min-width:215px"><strong style="color:#075985">${esc(g.city)}</strong><div style="margin-top:5px;display:grid;gap:4px">${items.map(c=>`<div><b style="color:#0369a1">${c.year}</b> · ${esc(host(c))}</div>`).join('')}</div></div>`;
+  const popup=`<div style="min-width:215px"><strong style="color:#075985">${esc(g.city)}</strong><div style="margin-top:5px;display:grid;gap:4px">${items.map(c=>`<div style="padding:3px 0"><b style="color:#0369a1">${c.year}</b> · ${esc(host(c))}${c.fullText?`<div style="margin-top:5px"><a href="${esc(c.fullText)}" target="_blank" rel="noopener noreferrer" style="display:inline-block;padding:6px 10px;border-radius:7px;background:#0369a1;color:#fff;font-size:12px;font-weight:700;text-decoration:none">📖 Xem toàn văn ${c.year} ↗</a></div>`:""}</div>`).join('')}</div></div>`;
   const m=new Vietflex.Marker([g.lat,g.lng],{keyboard:false,autoPanOnFocus:false}).bindPopup(popup).addTo(map);
   m.on('click',()=>selectConference(items[items.length-1].year,false));
   items.forEach(c=>markersByYear.set(c.year,m));
