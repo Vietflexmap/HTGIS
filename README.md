@@ -67,3 +67,15 @@ Mã website: dự án `Vietflexmap/HTGIS`.
 Thư viện bản đồ: `Vietflexmap/VN`.
 
 Thông tin hội thảo thuộc về các đơn vị tổ chức và các nguồn được liên kết trong từng hồ sơ năm.
+
+## Tài liệu toàn văn GIS 2024–2026
+
+Các tài liệu PDF được liên kết từ thư mục Google Drive gốc, không sao chép vào repository. Tại hồ sơ hội thảo từng năm, chọn **Toàn văn GIS · PDF (Google Drive)** để mở tài liệu.
+
+| Năm | Tệp trong Drive | Dung lượng | Toàn văn |
+|---|---|---:|---|
+| 2024 | GIS_full_2024 | 35.98 MB | [Xem PDF](https://drive.google.com/file/d/1CSiW-QzCmm_vKSrp2PhCVwhiavEOcJT5/view) |
+| 2025 | GIS_full_2025.pdf | 30.75 MB | [Xem PDF](https://drive.google.com/file/d/1cF0T0i6qFshHjifm5jHUY-G3OgbaeTdC/view) |
+| 2026 | GIS_full_2026 | 158.04 MB | [Xem PDF](https://drive.google.com/file/d/1VnyDvLyjBCIAVH6MlVSuLW75K_NadEXC/view) |
+
+[Thư mục nguồn Google Drive](https://drive.google.com/drive/folders/1BXVoow69o24xK_-hjTVOt8kKy7BDDhxB). Quyền xem PDF phụ thuộc vào cài đặt chia sẻ của chủ sở hữu Drive. Tài liệu thuộc quyền của các tác giả/đơn vị xuất bản tương ứng.
